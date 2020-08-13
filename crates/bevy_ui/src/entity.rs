@@ -1,7 +1,7 @@
 use super::Node;
 use crate::{
     render::UI_PIPELINE_HANDLE,
-    widget::{Button, Image, Text},
+    widget::{Button, Image, Text, TextInput},
     CalculatedSize, FocusPolicy, Interaction, Style,
 };
 use bevy_asset::Handle;
@@ -136,6 +136,63 @@ impl Default for TextComponents {
             style: Default::default(),
             transform: Default::default(),
             local_transform: Default::default(),
+        }
+    }
+}
+
+#[derive(Bundle)]
+pub struct TextInputComponents {
+    pub node: Node,
+    pub style: Style,
+    pub draw: Draw,
+    pub text: Text,
+    pub calculated_size: CalculatedSize,
+    pub focus_policy: FocusPolicy,
+    pub transform: Transform,
+    pub local_transform: LocalTransform,
+    pub text_input: TextInput,
+    pub interaction: Interaction,
+    pub material: Handle<ColorMaterial>,
+    pub mesh: Handle<Mesh>, // TODO: maybe abstract this out
+    pub render_pipelines: RenderPipelines,
+}
+
+impl Default for TextInputComponents {
+    fn default() -> Self {
+        TextInputComponents {
+            focus_policy: FocusPolicy::Block,
+            draw: Draw {
+                is_transparent: true,
+                ..Default::default()
+            },
+            material: Default::default(),
+            text: Default::default(),
+            node: Default::default(),
+            calculated_size: Default::default(),
+            style: Default::default(),
+            transform: Default::default(),
+            local_transform: Default::default(),
+            text_input: TextInput,
+            interaction: Interaction::default(),
+            mesh: QUAD_HANDLE,
+            render_pipelines: RenderPipelines::from_pipelines(vec![RenderPipeline::specialized(
+                UI_PIPELINE_HANDLE,
+                PipelineSpecialization {
+                    dynamic_bindings: vec![
+                        // Transform
+                        DynamicBinding {
+                            bind_group: 1,
+                            binding: 0,
+                        },
+                        // Node_size
+                        DynamicBinding {
+                            bind_group: 1,
+                            binding: 1,
+                        },
+                    ],
+                    ..Default::default()
+                },
+            )]),
         }
     }
 }

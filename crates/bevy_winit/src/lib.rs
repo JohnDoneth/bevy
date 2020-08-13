@@ -2,6 +2,7 @@ mod converters;
 mod winit_windows;
 pub use winit_windows::*;
 
+
 use bevy_input::{
     keyboard::KeyboardInput,
     mouse::{MouseButtonInput, MouseMotion},
@@ -13,6 +14,7 @@ use bevy_math::Vec2;
 use bevy_window::{
     CreateWindow, CursorMoved, Window, WindowCloseRequested, WindowCreated, WindowResized, Windows,
 };
+use event::ModifiersState;
 use winit::{
     event,
     event::{DeviceEvent, WindowEvent},
@@ -43,6 +45,8 @@ pub fn winit_runner(mut app: App) {
         &event_loop,
         &mut create_window_event_reader,
     );
+
+    let mut modifiers = ModifiersState::empty();
 
     log::debug!("Entering winit event loop");
     event_loop.run(move |event, event_loop, control_flow| {
@@ -83,6 +87,9 @@ pub fn winit_runner(mut app: App) {
                 window_id: winit_window_id,
                 ..
             } => match event {
+                WindowEvent::ModifiersChanged(new_modifiers) => {
+                    modifiers = new_modifiers;
+                }
                 WindowEvent::CloseRequested => {
                     let mut window_close_requested_events = app
                         .resources
@@ -95,7 +102,8 @@ pub fn winit_runner(mut app: App) {
                 WindowEvent::KeyboardInput { ref input, .. } => {
                     let mut keyboard_input_events =
                         app.resources.get_mut::<Events<KeyboardInput>>().unwrap();
-                    keyboard_input_events.send(converters::convert_keyboard_input(input));
+                    keyboard_input_events
+                        .send(converters::convert_keyboard_input(input, &modifiers));
                 }
                 WindowEvent::CursorMoved { position, .. } => {
                     let mut cursor_moved_events =

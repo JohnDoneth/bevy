@@ -1,6 +1,7 @@
 use crate::Input;
 use bevy_app::prelude::*;
-use bevy_ecs::{Res, ResMut, Local};
+use bevy_ecs::{Local, Res, ResMut};
+use std::collections::HashSet;
 
 /// A key input event from a keyboard device
 #[derive(Debug, Clone)]
@@ -8,6 +9,14 @@ pub struct KeyboardInput {
     pub scan_code: u32,
     pub key_code: Option<KeyCode>,
     pub state: ElementState,
+    pub modifiers: HashSet<Modifiers>,
+}
+#[derive(Debug, Clone, Eq, PartialEq, Hash)]
+pub enum Modifiers {
+    Shift,
+    Ctrl,
+    Alt,
+    Logo,
 }
 
 /// The current "press" state of an element
@@ -252,4 +261,48 @@ pub enum KeyCode {
     Copy,
     Paste,
     Cut,
+}
+
+pub fn convert_keycode_to_char(keycode: &KeyCode, modifiers: &HashSet<Modifiers>) -> Option<char> {
+    let mut character = Some(match *keycode {
+        KeyCode::A => 'A',
+        KeyCode::B => 'B',
+        KeyCode::C => 'C',
+        KeyCode::D => 'D',
+        KeyCode::E => 'E',
+        KeyCode::F => 'F',
+        KeyCode::G => 'G',
+        KeyCode::H => 'H',
+        KeyCode::I => 'I',
+        KeyCode::J => 'J',
+        KeyCode::K => 'K',
+        KeyCode::L => 'L',
+        KeyCode::M => 'M',
+        KeyCode::N => 'N',
+        KeyCode::O => 'O',
+        KeyCode::P => 'P',
+        KeyCode::Q => 'Q',
+        KeyCode::R => 'R',
+        KeyCode::S => 'S',
+        KeyCode::T => 'T',
+        KeyCode::U => 'U',
+        KeyCode::V => 'V',
+        KeyCode::W => 'W',
+        KeyCode::X => 'X',
+        KeyCode::Y => 'Y',
+        KeyCode::Z => 'Z',
+        KeyCode::Key1 => '!',
+        KeyCode::Space => ' ',
+        _ => return None,
+    });
+
+    if let Some(character) = character.as_mut() {
+        if modifiers.contains(&Modifiers::Shift) {
+            character.make_ascii_uppercase();
+        } else {
+            character.make_ascii_lowercase();
+        }
+    }
+
+    return character;
 }

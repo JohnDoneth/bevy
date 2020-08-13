@@ -19,7 +19,7 @@ pub mod prelude {
     pub use crate::{
         entity::*,
         node::*,
-        widget::{Button, Text},
+        widget::{Button, Text, TextInput},
         Anchors, Interaction, Margins,
     };
 }

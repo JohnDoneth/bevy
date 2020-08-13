@@ -207,6 +207,10 @@ name = "ui"
 path = "examples/ui/ui.rs"
 
 [[example]]
+name = "text_input"
+path = "examples/ui/text_input.rs"
+
+[[example]]
 name = "clear_color"
 path = "examples/window/clear_color.rs"
 

@@ -1,16 +1,40 @@
 use bevy_input::{
-    keyboard::{ElementState, KeyCode, KeyboardInput},
+    keyboard::{ElementState, KeyCode, KeyboardInput, Modifiers},
     mouse::MouseButton,
 };
+use std::collections::HashSet;
 
-pub fn convert_keyboard_input(keyboard_input: &winit::event::KeyboardInput) -> KeyboardInput {
+pub fn convert_keyboard_input(
+    keyboard_input: &winit::event::KeyboardInput,
+    modifiers: &winit::event::ModifiersState,
+) -> KeyboardInput {
     KeyboardInput {
         scan_code: keyboard_input.scancode,
         state: convert_element_state(keyboard_input.state),
         key_code: keyboard_input
             .virtual_keycode
             .map(|v| convert_virtual_key_code(v)),
+        modifiers: convert_modifiers(modifiers),
     }
+}
+
+pub fn convert_modifiers(modifiers: &winit::event::ModifiersState) -> HashSet<Modifiers> {
+    let mut set = HashSet::new();
+
+    if modifiers.shift() {
+        set.insert(Modifiers::Shift);
+    }
+    if modifiers.ctrl() {
+        set.insert(Modifiers::Ctrl);
+    }
+    if modifiers.alt() {
+        set.insert(Modifiers::Alt);
+    }
+    if modifiers.logo() {
+        set.insert(Modifiers::Logo);
+    }
+
+    set
 }
 
 pub fn convert_element_state(element_state: winit::event::ElementState) -> ElementState {
