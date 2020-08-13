@@ -3,7 +3,7 @@ use crate::resource::{Resource, Resources};
 use bevy_hecs::{Bundle, Component, DynamicBundle, Entity, World};
 use std::sync::{Arc, Mutex};
 
-/// A queued command to mutate the current [World] or [Resources] 
+/// A queued command to mutate the current [World] or [Resources]
 pub enum Command {
     WriteWorld(Box<dyn WorldWriter>),
     WriteResources(Box<dyn ResourcesWriter>),
