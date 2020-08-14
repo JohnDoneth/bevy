@@ -145,7 +145,6 @@ pub struct TextInputComponents {
     pub node: Node,
     pub style: Style,
     pub draw: Draw,
-    pub text: Text,
     pub calculated_size: CalculatedSize,
     pub focus_policy: FocusPolicy,
     pub transform: Transform,
@@ -166,7 +165,6 @@ impl Default for TextInputComponents {
                 ..Default::default()
             },
             material: Default::default(),
-            text: Default::default(),
             node: Default::default(),
             calculated_size: Default::default(),
             style: Default::default(),
